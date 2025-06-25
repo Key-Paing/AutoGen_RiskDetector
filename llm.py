@@ -4,7 +4,7 @@ import json
 import streamlit as st
 
 
-key_path = 'botexpert-459607-26d1eb471087.json'
+# key_path = 'botexpert-459607-26d1eb471087.json'
 
 raw = st.secrets["google"]["credentials"]
 service_account_info = json.loads(raw)
