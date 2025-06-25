@@ -19,7 +19,7 @@ credentials = Credentials.from_service_account_file(
 
 
 llm = VertexAI(
-    project='botexpert-459607',
+    project='machine-translation-001',
     location='us-central1',
     credentials=credentials,
     model = "gemini-2.5-pro-preview-05-06",
