@@ -12,10 +12,10 @@ credentials = Credentials.from_service_account_info(service_account_info, scopes
 
 
 # Create credentials
-credentials = Credentials.from_service_account_file(
-    key_path,
-    scopes=['https://www.googleapis.com/auth/cloud-platform']
-)
+# credentials = Credentials.from_service_account_file(
+#     key_path,
+#     scopes=['https://www.googleapis.com/auth/cloud-platform']
+# )
 
 
 llm = VertexAI(
