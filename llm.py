@@ -22,6 +22,5 @@ llm = VertexAI(
     project='machine-translation-001',
     location='us-central1',
     credentials=credentials,
-    model = "gemini-2.5-pro-preview-05-06",
-    credentials=credentials
+    model = "gemini-2.5-pro-preview-05-06"
 )
