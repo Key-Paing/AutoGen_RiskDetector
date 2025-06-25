@@ -1,6 +1,7 @@
 langchain-google-vertexai 
 google-auth
 google-cloud-aiplatform
+google-cloud-storage
 autogen-agentchat[llm,gemini]~=0.2
 autogen
 PyMuPDF
