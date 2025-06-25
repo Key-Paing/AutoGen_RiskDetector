@@ -14,10 +14,10 @@ credentials = Credentials.from_service_account_info(service_account_info, scopes
 client = storage.Client(credentials=credentials, project="machine-translation-001")
 
 
-
 llm = VertexAI(
     project='machine-translation-001',
     location='us-central1',
     credentials=credentials,
-    model = "gemini-2.5-pro-preview-05-06"
+    model = "gemini-2.5-pro-preview-05-06",
+    transport="rest"
 )
