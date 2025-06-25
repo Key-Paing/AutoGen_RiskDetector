@@ -1,0 +1,8 @@
+langchain-google-vertexai 
+google-auth
+google-cloud-aiplatform
+autogen-agentchat[llm,gemini]~=0.2
+autogen
+PyMuPDF
+ag2[gemini]
+streamlit 
