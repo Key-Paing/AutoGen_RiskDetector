@@ -2,7 +2,7 @@ from langchain_google_vertexai import VertexAI
 from google.oauth2.service_account import Credentials
 import json
 import streamlit as st
-from google.cloud import storage
+
 
 
 # key_path = 'botexpert-459607-26d1eb471087.json'
@@ -10,9 +10,6 @@ from google.cloud import storage
 raw = st.secrets["google"]["credentials"]
 service_account_info = json.loads(raw)
 credentials = Credentials.from_service_account_info(service_account_info, scopes=['https://www.googleapis.com/auth/cloud-platform'])
-
-client = storage.Client(credentials=credentials, project="machine-translation-001")
-
 
 llm = VertexAI(
     project='machine-translation-001',
