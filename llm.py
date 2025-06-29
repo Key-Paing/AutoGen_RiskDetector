@@ -9,7 +9,7 @@ try:
     raw = st.secrets["google"]["credentials"]
     key_path = json.loads(raw)
 
-    credentials = Credentials.from_service_account_info(
+    credentials = Credentials.from_service_account_file(
         key_path,
         scopes=['https://www.googleapis.com/auth/cloud-platform']
     )
