@@ -12,6 +12,10 @@ def extract_text_from_pdf(pdf_path):
     doc = fitz.open(stream=pdf_path.read(), filetype="pdf")
     return "\n".join(page.get_text() for page in doc)
 
+def chunk_text(text, max_chars=3000):
+    return [text[i:i+max_chars] for i in range(0, len(text), max_chars)]
+
+
 def filter_risk_output(output):
     """Filter the output to show only risk-related content"""
     lines = output.split('\n')
@@ -50,6 +54,11 @@ if st.button("Analyze Risks"):
             contract_text = extract_text_from_pdf(contract_file)
             rules_text = extract_text_from_pdf(rules_file)
 
+            contract_chunks = chunk_text(contract_text)
+            rules_chunks = chunk_text(rules_text)
+
+            all_outputs = []
+
             # Setup group chat
             group_chat = GroupChat(
                 agents=[user, language_detector_agent, risk_detecting_agent],
@@ -66,25 +75,47 @@ if st.button("Analyze Risks"):
             import io
             import contextlib
 
-            result_buffer = io.StringIO()
-            with contextlib.redirect_stdout(result_buffer):
+            # result_buffer = io.StringIO()
+            # with contextlib.redirect_stdout(result_buffer):
 
-                user.initiate_chat(
-                    chat_manager,
-                    message=f"""Please analyze this contract for risks against the provided rules.
+            #     user.initiate_chat(
+            #         chat_manager,
+            #         message=f"""Please analyze this contract for risks against the provided rules.
 
-                            CONTRACT DOCUMENT:
-                            {contract_text}
+            #                 CONTRACT DOCUMENT:
+            #                 {contract_text}
 
-                            COMPANY RULES AND POLICIES:
-                            {rules_text}
+            #                 COMPANY RULES AND POLICIES:
+            #                 {rules_text}
 
-                            Please identify risky clauses with the help of risk detection agent.""",
-                    summary_method="last_msg",
-                )
+            #                 Please identify risky clauses with the help of risk detection agent.""",
+            #         summary_method="last_msg",
+            #     )
+
+            # Iterate through all combinations of chunks (can be adjusted if needed)
+            for i, c_chunk in enumerate(contract_chunks):
+                for j, r_chunk in enumerate(rules_chunks):
+                    result_buffer = io.StringIO()
+                    with contextlib.redirect_stdout(result_buffer):
+                        user.initiate_chat(
+                            chat_manager,
+                            message=f"""Please analyze this contract section for risks against this part of the company rules.
+
+                            CONTRACT PART {i+1}:
+                            {c_chunk}
+
+                                RULES PART {j+1}:
+                                {r_chunk}
+
+                            Please identify risky clauses only.""",
+                            summary_method="last_msg",
+                        )
+                    all_outputs.append(result_buffer.getvalue())
+
 
     # Get the output and display it
-    chat_output = result_buffer.getvalue()
-    filtered_output = filter_risk_output(chat_output)
+    # chat_output = result_buffer.getvalue()
+    combined_output = "\n".join(all_outputs)
+    filtered_output = filter_risk_output(combined_output)
     st.subheader("Detected Risks")
     st.markdown(filtered_output)
