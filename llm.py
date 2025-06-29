@@ -7,9 +7,10 @@ import streamlit as st
 
 try:
     raw = st.secrets["google"]["credentials"]
-    service_account_info = json.loads(raw)
+    key_path = json.loads(raw)
+
     credentials = Credentials.from_service_account_info(
-        service_account_info,
+        key_path,
         scopes=['https://www.googleapis.com/auth/cloud-platform']
     )
 
