@@ -80,7 +80,7 @@ if st.button("Analyze Risks"):
                             {rules_text}
 
                             Please identify risky clauses with the help of risk detection agent.""",
-                    summary_method="reflection_with_llm",
+                    summary_method="last_msg",
                 )
 
     # Get the output and display it
