@@ -1,5 +1,6 @@
 from langchain_google_vertexai import VertexAI
 from google.oauth2.service_account import Credentials
+from google.auth import default
 import json
 import streamlit as st
 
@@ -15,8 +16,8 @@ try:
     llm = VertexAI(
         project='machine-translation-001',
         location='us-central1',
-        credentials=credentials,
-        model = "gemini-2.5-pro-preview-05-06"
+        model = "gemini-2.5-pro-preview-05-06",
+        credentials=credentials
     )
 except Exception as e:
     st.error("LLM setup failed")
