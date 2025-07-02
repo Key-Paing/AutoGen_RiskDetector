@@ -89,7 +89,7 @@ if st.button("Analyze Risks"):
                             Please identify risky clauses with the help of risk detection agent."""
             
             input_tokens = count_tokens(user_message)
-            input_calculated_cost = round(calculate_cost(input_tokens, 0), 4)
+            input_calculated_cost = calculate_cost(input_tokens, 0)
 
             # Setup group chat
             group_chat = GroupChat(
@@ -121,7 +121,7 @@ if st.button("Analyze Risks"):
     # Get the output and display it
     chat_output = result_buffer.getvalue()
     output_tokens = count_tokens(chat_output)
-    output_calculated_cost = round(calculate_cost(0, output_tokens), 4)
+    output_calculated_cost = calculate_cost(0, output_tokens)
 
     total_cost = output_calculated_cost + input_calculated_cost
 
