@@ -67,7 +67,7 @@ if st.button("Analyze Risks"):
                             COMPANY RULES AND POLICIES:
                             {rules_text}
 
-                            Please identify risky clauses with the help of risk detection agent.""",
+                            Please identify risky clauses with the help of risk detection agent."""
             
             input_tokens = count_tokens(user_message)
 
