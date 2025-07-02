@@ -2,6 +2,9 @@ from autogen import GroupChat, GroupChatManager
 from agents import risk_detecting_agent, language_detector_agent,user
 import streamlit as st
 import fitz
+#For token counting
+import tiktoken
+
 
 st.title("Risk Detection with AutoGen")
 
@@ -42,6 +45,11 @@ def filter_risk_output(output):
     
     return '\n'.join(filtered_lines) if filtered_lines else "No risks detected in the analysis."
 
+#Function for token counting
+def count_tokens(text):
+    encoding = tiktoken.get_encoding("cl100k_base")
+    return len(encoding.encode(text))
+
 
 if st.button("Analyze Risks"):
     if contract_file and rules_file:
@@ -49,6 +57,19 @@ if st.button("Analyze Risks"):
         # Extract text from uploaded PDFs
             contract_text = extract_text_from_pdf(contract_file)
             rules_text = extract_text_from_pdf(rules_file)
+
+            #Input
+            user_message = f"""Please analyze this contract for risks against the provided rules.
+
+                            CONTRACT DOCUMENT:
+                            {contract_text}
+
+                            COMPANY RULES AND POLICIES:
+                            {rules_text}
+
+                            Please identify risky clauses with the help of risk detection agent.""",
+            
+            input_tokens = count_tokens(user_message)
 
             # Setup group chat
             group_chat = GroupChat(
@@ -71,20 +92,25 @@ if st.button("Analyze Risks"):
 
                 user.initiate_chat(
                     chat_manager,
-                    message=f"""Please analyze this contract for risks against the provided rules.
-
-                            CONTRACT DOCUMENT:
-                            {contract_text}
-
-                            COMPANY RULES AND POLICIES:
-                            {rules_text}
-
-                            Please identify risky clauses with the help of risk detection agent.""",
-                    summary_method="last_msg",
+                    message=user_message,
+                    summary_method="last_msg"
                 )
+
+                
 
     # Get the output and display it
     chat_output = result_buffer.getvalue()
+    output_tokens = count_tokens(chat_output)
+
+    #Filter the output to show only risk-related content
     filtered_output = filter_risk_output(chat_output)
+
+    #Show the results
     st.subheader("Detected Risks")
     st.markdown(filtered_output)
+
+    #Show the token counts
+    st.subheader("Token Counts")
+    st.markdown(f"Input Tokens: {input_tokens}")
+    st.markdown(f"Output Tokens: {output_tokens}")
+
