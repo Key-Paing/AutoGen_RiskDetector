@@ -14,12 +14,23 @@ try:
         scopes=['https://www.googleapis.com/auth/cloud-platform']
     )
 
+    config_list = [
+        {
+            "model": "gemini-2.5-pro-preview-05-06",
+            "api_type": "google",
+            "project_id": "machine-translation-001",
+            "location": "us-central1",
+            "credentials": credentials
+        }
+    ]
+
     llm = VertexAI(
         project='machine-translation-001',
         location='us-central1',
         model = "gemini-2.5-pro-preview-05-06",
         credentials=credentials
     )
+
 except Exception as e:
     st.error("LLM setup failed")
     st.text(repr(e))
