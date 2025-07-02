@@ -50,6 +50,25 @@ def count_tokens(text):
     encoding = tiktoken.get_encoding("cl100k_base")
     return len(encoding.encode(text))
 
+def calculate_cost(input_tokens: int, output_tokens: int)-> dict:
+    """Calculate the total cost based on input and output tokens."""
+    if input_tokens > 200000:
+        input_pricing = 2.50
+    else:
+        input_pricing = 1.25
+
+    if output_tokens > 200000:
+        output_pricing = 15.00
+    else:
+        output_pricing = 10.0
+
+    input_cost = (input_tokens / 1000000 )* input_pricing
+    output_cost = (output_tokens / 1000000 )* output_pricing
+
+
+
+    return input_cost, output_cost
+
 
 if st.button("Analyze Risks"):
     if contract_file and rules_file:
@@ -70,6 +89,7 @@ if st.button("Analyze Risks"):
                             Please identify risky clauses with the help of risk detection agent."""
             
             input_tokens = count_tokens(user_message)
+            input_calculated_cost = round(calculate_cost(input_tokens, 0), 4)
 
             # Setup group chat
             group_chat = GroupChat(
@@ -101,6 +121,9 @@ if st.button("Analyze Risks"):
     # Get the output and display it
     chat_output = result_buffer.getvalue()
     output_tokens = count_tokens(chat_output)
+    output_calculated_cost = round(calculate_cost(0, output_tokens), 4)
+
+    total_cost = output_calculated_cost + input_calculated_cost
 
     #Filter the output to show only risk-related content
     filtered_output = filter_risk_output(chat_output)
@@ -113,4 +136,11 @@ if st.button("Analyze Risks"):
     st.subheader("Token Counts")
     st.markdown(f"Input Tokens: {input_tokens}")
     st.markdown(f"Output Tokens: {output_tokens}")
+
+    st.subheader("Cost Calculation")
+    st.markdown(f"Input Cost: ${input_calculated_cost}")
+    st.markdown(f"Output Cost: ${output_calculated_cost}")
+    st.markdonw(f"Total Cost: ${total_cost}")
+
+
 
