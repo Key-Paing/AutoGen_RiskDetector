@@ -140,7 +140,7 @@ if st.button("Analyze Risks"):
     st.subheader("Cost Calculation")
     st.markdown(f"Input Cost: ${input_calculated_cost}")
     st.markdown(f"Output Cost: ${output_calculated_cost}")
-    st.markdonw(f"Total Cost: ${total_cost}")
+    st.markdown(f"Total Cost: ${total_cost}")
 
 
 
